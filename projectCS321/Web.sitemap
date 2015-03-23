@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+    <siteMapNode url="" title=""  description="">
+      <siteMapNode url="./Reservation.aspx" title="Reservations"  description="Click to schedule a reservation." />
+      <siteMapNode url="./DiscountsAndCupons.aspx" title="Discounts and Cupons"  description="List of our discounts and cupons." />
+      <siteMapNode url="./Locations.aspx" title="Locations"  description="Location of our service." />
+      <siteMapNode url="./VehicleGuide.aspx" title="Vehicle Guide"  description="List of our vehicles." />
+      <siteMapNode url="./ForSale.aspx" title="For Sale"  description="Our used cars for sale." />
+      <siteMapNode url="./Rewards.aspx" title="Rewards"  description="Information about reward program." />
+    </siteMapNode>
+</siteMap>

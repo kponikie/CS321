@@ -1,0 +1,40 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage_MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+
+        <div id="Page">
+            <header>
+                <a id="hSection1" href="./Default.aspx" title="Home"><img alt="Company Logo" src="./App_Themes/Default/Images/logo.JPG" /></a>
+                <h1 id="hSection2">1.800.666.6696</h1>
+            </header>
+            <nav>
+                <asp:Menu ID="Menu" runat="server" DataSourceID="SiteMapDataSource1" SkinId="MainMenu"></asp:Menu>
+                <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" />
+            </nav>
+        
+            <section id="MainContent">
+                <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+                    <%-- Content from individual web pages. --%>
+                </asp:ContentPlaceHolder>
+            </section>
+            <footer>
+                <div id="fSection1">
+                    <asp:TreeView ID="TreeView1" CssClass="Notes" runat="server" DataSourceID="SiteMapDataSource1" ShowExpandCollapse="False"></asp:TreeView>
+                </div>
+                <p id="fSection2"><img style="vertical-align:middle" alt="Number One Sign" src="./App_Themes/Default/Images/numberOne.JPG" width="30"/>Customer Satisfaction</p>
+                <p id="fSection3"></p>
+                <p id="copyright">Copyright © 2015 Luxurious Rentals. All rights reserved</p>
+            </footer>
+        </div>
+    </form>
+</body>
+</html>
