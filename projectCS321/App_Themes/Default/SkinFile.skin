@@ -21,3 +21,7 @@ StaticDisplayLevels="2" Orientation="Horizontal" StaticSubMenuIndent="16px" >
     <StaticMenuItemStyle HorizontalPadding="15px" VerticalPadding="10px" />
     <StaticSelectedStyle BackColor="#5D7B9D" />
 </asp:Menu>
+
+<asp:ListBox runat="server" SkinId="lbxGuide">
+    
+</asp:ListBox>
