@@ -52,6 +52,7 @@ h1
   */
   width: 800px;
   background-color: white;
+  box-shadow: 2px 2px 40px grey;
   margin: auto;
 }
 
@@ -99,8 +100,9 @@ Section#MainContent
   font-size: 0.8em;
   width: 800px;
   background-color: white;
-  min-height: 400px;
+  min-height: 500px;
   padding-bottom:5px;
+  padding-top: 20px;
 }
 
 footer
@@ -108,6 +110,7 @@ footer
   /*
     The footer is positioned below all other content (yet still within PageWrapper).
   */
+  clear: both;
   width: 800px;
   height: 150px;
   background-color: black;
@@ -145,4 +148,43 @@ footer
     clear:both;
     color: #808080;
     font-weight: normal;
+}
+
+ /*Vehicle Guide Classes*/
+.txtBox 
+{
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    
+}
+
+.listBox 
+{
+    border:none;
+    padding-left: 15px;
+    padding-right: 30px;
+}
+
+.textAlignCenter
+{
+    text-align: center;
+}
+
+#divLocation
+{
+    padding: 20px;
+    font-size: 16px;
+    text-align: center;
+    width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#divReservation
+{
+    padding: 20px;
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
 }
