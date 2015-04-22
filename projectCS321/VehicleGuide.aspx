@@ -40,7 +40,7 @@
     <asp:Label ID="lblcarId" runat="server" Text="Vehicle Ref #: "></asp:Label>
     <asp:TextBox ID="txtcarId" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
     <br />
-    <asp:Label ID="lblLocation" runat="server" Text="Availability: "></asp:Label>
+    <asp:Label ID="lblAvailability" runat="server" Text="Available Today: "></asp:Label>
     <asp:TextBox ID="txtAvailability" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
     <br />
      
@@ -51,7 +51,7 @@
         <asp:Label ID="lblVehTotal" runat="server" Text="Vehicle Inventory: "></asp:Label>
         <asp:TextBox ID="txtVehTotal" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
         <br />
-        <asp:Label ID="lblAvalTotal" runat="server" Text="Available for Rent: "></asp:Label>
+        <asp:Label ID="lblAvalTotal" runat="server" Text="Available Today: "></asp:Label>
         <asp:TextBox ID="txtAvalTotal" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
         <br /><br />
         <p>For more information, select a vehicle on the left.<br />

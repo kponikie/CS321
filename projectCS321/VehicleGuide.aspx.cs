@@ -26,7 +26,6 @@ public partial class VehicleGuide : System.Web.UI.Page
     {
         lbxCars.Items.Clear();
 
-        //string selectSQL = "SELECT car_id, make, model, color, year, milage, transmission, drivetrain FROM carData";
         string selectSQL = "SELECT * FROM carData";
 
         SqlConnection con = new SqlConnection(connectionString);
@@ -40,21 +39,26 @@ public partial class VehicleGuide : System.Web.UI.Page
 
             int totalVehicles = 0;
             int availableVehicles = 0;
+            string carID;
 
             while (reader.Read())
             {
-                ListItem newItem = new ListItem();
-                if (reader["location_id"].ToString() == 0.ToString())
-                {
-                    availableVehicles--;
-                    newItem.Text = " *** ";
-                }
+                ListItem newItem = new ListItem();          
+
                 newItem.Text += reader["make"].ToString();
                 newItem.Text += " ";
                 newItem.Text += reader["model"].ToString();
                 newItem.Text += ", ";
                 newItem.Text += reader["year"].ToString();
-                newItem.Value = reader["car_id"].ToString();
+                carID = reader["car_id"].ToString();
+                newItem.Value = carID;
+
+                if (vehicleCount(carID))
+                {
+                    availableVehicles--;
+                    newItem.Text += " *** ";
+                }
+
                 lbxCars.Items.Add(newItem);
 
                 totalVehicles++;
@@ -110,16 +114,7 @@ public partial class VehicleGuide : System.Web.UI.Page
 
             string availability = reader["location_id"].ToString();
 
-            if (availability == 0.ToString())
-            {
-                txtAvailability.Text = "No";
-                txtAvailability.ForeColor = System.Drawing.Color.Red;
-            }
-            else
-            {
-                txtAvailability.Text = "Yes";
-                txtAvailability.ForeColor = System.Drawing.Color.Green;
-            }
+            vehicleAvailability();
 
             reader.Close();
             divVehicleGuide2.Visible = false;
@@ -135,6 +130,92 @@ public partial class VehicleGuide : System.Web.UI.Page
             con.Close();
         }
     }
+
+        public void vehicleAvailability ()
+        {
+
+            string selectSQL = "SELECT pickup_date FROM reservationForm WHERE reservationForm.car_id = '" + lbxCars.SelectedItem.Value.ToString() + "' ";
+
+            SqlConnection con = new SqlConnection(connectionString);
+            SqlCommand cmd = new SqlCommand(selectSQL, con);
+            SqlDataReader reader;
+
+            DateTime temp;
+            txtAvailability.Text = "Yes";
+            txtAvailability.ForeColor = System.Drawing.Color.Green;
+
+            try
+            {
+                con.Open();
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    temp = Convert.ToDateTime(reader["pickup_date"].ToString());
+                    
+                    if (temp == DateTime.Today || temp == DateTime.Today.AddDays(1))
+                    {
+                        txtAvailability.Text = "No";
+                        txtAvailability.ForeColor = System.Drawing.Color.Red;  
+                    }
+                }
+                reader.Close();
+
+            }
+            catch (Exception err)
+            {
+                lblResults.Text = "Error reading from database";
+                lblResults.Text += err.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public Boolean vehicleCount(string carID)
+        {
+
+            string selectSQL = "SELECT pickup_date FROM reservationForm WHERE reservationForm.car_id = '" + carID + "' ";
+
+            SqlConnection con = new SqlConnection(connectionString);
+            SqlCommand cmd = new SqlCommand(selectSQL, con);
+            SqlDataReader reader;
+
+            DateTime temp;
+
+            try
+            {
+                con.Open();
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+
+                    temp = Convert.ToDateTime(reader["pickup_date"].ToString());
+
+                    if (temp == DateTime.Today || temp == DateTime.Today.AddDays(1))
+                    {
+                        return true;
+                    }
+                }
+                reader.Close();
+
+            }
+            catch (Exception err)
+            {
+                lblResults.Text = "Error reading from database";
+                lblResults.Text += err.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return false;
+        }
+    
 }
 
     
