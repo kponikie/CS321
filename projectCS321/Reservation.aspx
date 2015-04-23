@@ -8,24 +8,27 @@
 
         <div id="ReservationEdit" runat="server" visible="false">
 
-            <asp:Button ID="btnNewReservation" runat="server" Text="New" 
+            <asp:Button ID="btnNewReservation" runat="server" Text="New" Width="210px" 
                 OnClick="btnNewReservation_Click" />
+            <br /><br />
 
-            <asp:Button ID="btnEditReservation" runat="server" Text="Delete" 
+            <asp:DropDownList ID="ddlReservationList" runat="server"></asp:DropDownList>
+
+            <asp:Button ID="btnEditReservation" runat="server" Text="View" 
                 OnClick="btnEditReservation_Click" />
+            <br /><br />
 
-
-            <asp:DropDownList ID="DropDownList1" runat="server" 
-                DataSourceID="SqlDataSource1" DataTextField="pickup_date" 
-                DataValueField="reservation_id"></asp:DropDownList>
-
-            <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
-                ConnectionString="<%$ ConnectionStrings:zzCS321_1ConnectionString %>" 
-                SelectCommand="SELECT [reservation_id], [car_id], [pickup_date], [pickup_time] FROM [reservationForm] WHERE ([customer_id] = @customer_id) ORDER BY [pickup_date]">
-                <SelectParameters>
-                    <asp:SessionParameter Name="customer_id" SessionField="userID" Type="Int32" />
-                </SelectParameters>
-            </asp:SqlDataSource>
+            <div id="ReservationEdit2" runat="server">
+                Pickup Date <br />
+                <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+                <br />
+                Return Date <br />
+                <asp:Label ID="Label2" runat="server" Text=""></asp:Label>
+                <br />
+                Car Info <br />
+                <asp:Label ID="Label3" runat="server" Text=""></asp:Label>
+                <br />
+            </div>
 
         </div>
 
@@ -146,6 +149,8 @@
         </div>
 
         <asp:Label runat="server" Text="" ID="lblResults"></asp:Label>
+        <br />
+        <asp:Label runat="server" Text="" ID="lblResults2"></asp:Label>
 
     </div>
 

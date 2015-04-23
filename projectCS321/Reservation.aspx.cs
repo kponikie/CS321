@@ -22,6 +22,7 @@ public partial class Reservation : System.Web.UI.Page
             {
                 ReservationData0.Visible = false;
                 ReservationEdit.Visible = true;
+                FillReservationList();
             }
         }
     }
@@ -345,7 +346,7 @@ public partial class Reservation : System.Web.UI.Page
         {
             con.Open();
             added = cmd.ExecuteNonQuery();
-            lblResults.Text = added.ToString() + " record inserted.";
+       
         }
         catch (Exception err)
         {
@@ -363,11 +364,24 @@ public partial class Reservation : System.Web.UI.Page
             resetForm();
             ddlLocation.SelectedIndex = 0;
             ddlCarList.SelectedIndex = 0;
+            ReservationData.Visible = false;
+            ReservationData0.Visible = false;
             ReservationData2.Visible = false;
             ReservationData3.Visible = false;
-        }
+            lblResults.Text = "Thank You";
 
-        
+            if (Session["userName"] != null)
+            {
+                lblResults.Text += " " + Session["firstName"].ToString() + ".";
+                lblResults2.Text = "Reservation complete.";
+            }
+            else
+            {
+                lblResults.Text += ".";
+                lblResults2.Text = " Don't forget to call us to confirm your reservation !";
+            }
+
+        }  
     
     }
 
@@ -380,6 +394,51 @@ public partial class Reservation : System.Web.UI.Page
     }
     protected void btnEditReservation_Click(object sender, EventArgs e)
     {
+
+        
+
+    }
+
+    public void FillReservationList()
+    {
+
+        ListItem newFirstItem = new ListItem();
+        newFirstItem.Text = "-- PLEASE SELECT --";
+        newFirstItem.Value = "-1";
+        ddlReservationList.Items.Add(newFirstItem);
+
+        string selectSQL = "SELECT reservation_id, pickup_date, pickup_time FROM reservationForm WHERE customer_id = '" + Session["userID"].ToString() + "' ORDER BY pickup_date ASC " ;
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(selectSQL, con);
+        SqlDataReader reader;
+
+        try
+        {
+            con.Open();
+            reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                ListItem newItem = new ListItem();
+                newItem.Text = Convert.ToDateTime(reader["pickup_date"]).ToShortDateString();
+                newItem.Text += " @ ";
+                newItem.Text += reader["pickup_time"].ToString();
+                newItem.Value = reader["reservation_id"].ToString();
+                ddlReservationList.Items.Add(newItem);
+            }
+            reader.Close();
+
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error reading from database: ";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
 
     }
    
