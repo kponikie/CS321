@@ -18,6 +18,11 @@ public partial class Reservation : System.Web.UI.Page
         {
             fillTimeList();
             fillLocationList();
+            if (Session["userName"] != null)
+            {
+                ReservationData0.Visible = false;
+                ReservationEdit.Visible = true;
+            }
         }
     }
 
@@ -35,6 +40,8 @@ public partial class Reservation : System.Web.UI.Page
     {
         txtPickupDate.Text = "";
         ddlPickupTime.SelectedIndex = 0;
+        txtFirstName.Text = "";
+        txtLastName.Text = "";
         txtEmail.Text = "";
         txtPhone.Text = "";
         txtReturnDate.Text = "";
@@ -182,6 +189,14 @@ public partial class Reservation : System.Web.UI.Page
         Calendar.Visible = false;
         btnSmallCalendar.Visible = true;
         ReservationData3.Visible = true;
+
+        if (Session["userName"] != null)
+        {
+            txtFirstName.Text = Session["firstName"].ToString();
+            txtLastName.Text = Session["lastName"].ToString();
+            txtPhone.Text = Session["phone"].ToString();
+            txtEmail.Text = Session["email"].ToString();
+        }
     }
 
     protected void Calendar_DayRender(object sender, DayRenderEventArgs e)
@@ -265,7 +280,7 @@ public partial class Reservation : System.Web.UI.Page
     }
     protected void ddlCarList_SelectedIndexChanged(object sender, EventArgs e)
     {
-        resetForm();
+        //resetForm();
 
         if (ddlCarList.Items.Count > 1)
         {
@@ -291,9 +306,9 @@ public partial class Reservation : System.Web.UI.Page
         //Define ADO.NET object
         string insertSQL;
         insertSQL = "INSERT INTO reservationForm (";
-        insertSQL += "location_id, car_id, pickup_date, pickup_time, return_date, return_time, email, phone, customer_id, cupon_id) ";
+        insertSQL += "location_id, car_id, pickup_date, pickup_time, return_date, return_time, first_name, last_name, email, phone, customer_id, cupon_id) ";
         insertSQL += "VALUES (";
-        insertSQL += "@loci, @cari, @picd , @pict, @retd, @rett, @emai, @phon, @cusi, @cupi)";
+        insertSQL += "@loci, @cari, @picd , @pict, @retd, @rett, @firs, @last, @emai, @phon, @cusi, @cupi)";
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(insertSQL, con);
@@ -305,10 +320,23 @@ public partial class Reservation : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@pict", ddlPickupTime.SelectedItem.Value);
         cmd.Parameters.AddWithValue("@retd", txtReturnDate.Text);
         cmd.Parameters.AddWithValue("@rett", txtReturnTime.Text);
+        cmd.Parameters.AddWithValue("@firs", txtFirstName.Text);
+        cmd.Parameters.AddWithValue("@last", txtLastName.Text);
         cmd.Parameters.AddWithValue("@emai", txtEmail.Text);
         cmd.Parameters.AddWithValue("@phon", txtPhone.Text);
-        cmd.Parameters.AddWithValue("@cusi", 0);
-        cmd.Parameters.AddWithValue("@cupi", 0);
+
+        if (Session["userName"] != null)
+        {
+            cmd.Parameters.AddWithValue("@cusi", Convert.ToInt32(Session["userID"]));
+            cmd.Parameters.AddWithValue("@cupi", 1);
+        }
+        else
+        {
+            cmd.Parameters.AddWithValue("@cusi", 0);
+            cmd.Parameters.AddWithValue("@cupi", 0);
+        }
+        
+        
 
         //Try to open the database and execute the update.
         int added = 0; //counter
@@ -342,4 +370,17 @@ public partial class Reservation : System.Web.UI.Page
         
     
     }
+
+    protected void btnNewReservation_Click(object sender, EventArgs e)
+    {
+
+        ReservationEdit.Visible = false;
+        ReservationData0.Visible = true;
+
+    }
+    protected void btnEditReservation_Click(object sender, EventArgs e)
+    {
+
+    }
+   
 }

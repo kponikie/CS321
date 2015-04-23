@@ -56,6 +56,9 @@ public partial class VehicleGuide : System.Web.UI.Page
                 if (vehicleCount(carID))
                 {
                     availableVehicles--;
+                }
+                if (Session["userName"] != null)
+                {
                     newItem.Text += " *** ";
                 }
 

@@ -14,8 +14,14 @@
         <div id="Page">
             <header>
                 <a id="hSection1" href="./Default.aspx" title="Home"><img alt="Company Logo" src="./App_Themes/Default/Images/logo.JPG" /></a>
-                <h1 id="hSection2">1.800.666.6696</h1>
+                <div id="hSection2">
+                <h1>1.800.666.6696</h1><br />
+                    <asp:Label ID="lblWelcome" runat="server" Text="" ForeColor="Black"></asp:Label>
+                    <asp:Button ID="btnLogin" runat="server" Text="Log In" Visible="false" PostBackUrl="~/login.aspx" />
+                    <asp:Button ID="btnLogout" runat="server" Text="Log Out" Visible="false" OnClick="btnLogout_Click" />
+                </div>
             </header>
+            <div id="UserLoginBar" runat="server" visible="false"></div>
             <nav>
                 <asp:Menu ID="Menu" runat="server" DataSourceID="SiteMapDataSource1" SkinId="MainMenu"></asp:Menu>
                 <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" />

@@ -6,13 +6,37 @@
 
     <div id="divReservation">
 
-        <%--Pickup Location--%>
-        Pickup Location<br />
-        <asp:Label ID="lblLocation" runat="server" Text="Location: "></asp:Label>
-        <asp:DropDownList ID="ddlLocation" runat="server" 
-            OnSelectedIndexChanged="ddlLocation_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
-        <br /><br />
+        <div id="ReservationEdit" runat="server" visible="false">
 
+            <asp:Button ID="btnNewReservation" runat="server" Text="New" 
+                OnClick="btnNewReservation_Click" />
+
+            <asp:Button ID="btnEditReservation" runat="server" Text="Delete" 
+                OnClick="btnEditReservation_Click" />
+
+
+            <asp:DropDownList ID="DropDownList1" runat="server" 
+                DataSourceID="SqlDataSource1" DataTextField="pickup_date" 
+                DataValueField="reservation_id"></asp:DropDownList>
+
+            <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
+                ConnectionString="<%$ ConnectionStrings:zzCS321_1ConnectionString %>" 
+                SelectCommand="SELECT [reservation_id], [car_id], [pickup_date], [pickup_time] FROM [reservationForm] WHERE ([customer_id] = @customer_id) ORDER BY [pickup_date]">
+                <SelectParameters>
+                    <asp:SessionParameter Name="customer_id" SessionField="userID" Type="Int32" />
+                </SelectParameters>
+            </asp:SqlDataSource>
+
+        </div>
+
+        <div id="ReservationData0" runat="server">
+            <%--Pickup Location--%>
+            Pickup Location<br />
+            <asp:Label ID="lblLocation" runat="server" Text="Location: "></asp:Label>
+            <asp:DropDownList ID="ddlLocation" runat="server" 
+                OnSelectedIndexChanged="ddlLocation_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
+            <br /><br />
+        </div>
         <div id="ReservationData" runat="server" visible="false">
 
             <%--Vehicle--%>
@@ -62,6 +86,24 @@
                 <asp:TextBox ID="txtReturnTime" runat="server" Width="80px" ReadOnly="true" ToolTip="Automatically Calculated Time"></asp:TextBox>&nbsp
                 <br /><br />
 
+                <%--First Name--%>
+                <asp:Label ID="lblFirstName" runat="server" Text="First Name: " ></asp:Label>
+                <asp:TextBox ID="txtFirstName" runat="server" Width="200px" ToolTip="First Name" ></asp:TextBox>&nbsp
+                
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" 
+                    ErrorMessage="* Required Field" ControlToValidate="txtFirstName" 
+                    Display="Dynamic"></asp:RequiredFieldValidator>
+                <br />
+
+                <%--Last Name--%>
+                <asp:Label ID="lblLastName" runat="server" Text="Last Name: " ></asp:Label>
+                <asp:TextBox ID="txtLastName" runat="server" Width="200px" ToolTip="Last Name" ></asp:TextBox>&nbsp
+                
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server" 
+                    ErrorMessage="* Required Field" ControlToValidate="txtLastName" 
+                    Display="Dynamic"></asp:RequiredFieldValidator>
+                <br />
+
                 <%--Email--%>
                 <asp:Label ID="lblEmail" runat="server" Text="Email: " ></asp:Label>
                 <asp:TextBox ID="txtEmail" runat="server" Width="200px" ToolTip="format: someone@domain.com" ></asp:TextBox>&nbsp
@@ -74,9 +116,7 @@
                     ErrorMessage="Invalid Email address." ForeColor="Red" ControlToValidate="txtEmail" 
                     ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
 
-                    
-
-                <br /><br />
+                <br />
 
                 <%--Phone--%>
                 <asp:Label ID="lblPhone" runat="server" Text="Phone: " ></asp:Label>
@@ -90,16 +130,18 @@
                     ErrorMessage="Invalid Phone Number." ForeColor="Red" 
                     ControlToValidate="txtPhone" ValidationExpression="((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}" 
                     ></asp:RegularExpressionValidator>
+                <br />
 
-                    
+                <%--Cupon--%>
+                <asp:Label ID="lblCupon" runat="server" Text="Cupon: " ></asp:Label>
+                <asp:TextBox ID="txtCupon" runat="server" Width="200px" ToolTip="Cupon number" ></asp:TextBox>&nbsp        
 
-                <br /><br /><br />
+                <br /><br />
 
                 <asp:Button ID="btnSubmit" runat="server" Text="Submit" Height="26px" 
                     OnClick="btnSubmit_Click" />
 
             </div>
-
 
         </div>
 

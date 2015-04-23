@@ -35,7 +35,7 @@
         </asp:SqlDataSource>
 
     </div>
-    <br /><br /><br />
+    <br /><br />
     <p class="textAlignCenter">All location are open Monday-Sunday 8AM - 8PM local time.</p>
 
 </asp:Content>
