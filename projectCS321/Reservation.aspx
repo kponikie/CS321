@@ -8,26 +8,46 @@
 
         <div id="ReservationEdit" runat="server" visible="false">
 
-            <asp:Button ID="btnNewReservation" runat="server" Text="New" Width="210px" 
+            <asp:Label ID="lblReservationResults" runat="server" Text=""></asp:Label>
+            <br /><br />
+
+            <asp:Button ID="btnNewReservation" runat="server" Text="New" Width="160px" BackColor="LightGreen"
                 OnClick="btnNewReservation_Click" />
             <br /><br />
 
-            <asp:DropDownList ID="ddlReservationList" runat="server"></asp:DropDownList>
+            <asp:DropDownList ID="ddlReservationList" runat="server"  
+             AutoPostBack="True" OnSelectedIndexChanged="ddlReservationList_SelectedIndexChanged"></asp:DropDownList>
 
-            <asp:Button ID="btnEditReservation" runat="server" Text="View" 
-                OnClick="btnEditReservation_Click" />
             <br /><br />
 
-            <div id="ReservationEdit2" runat="server">
-                Pickup Date <br />
-                <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+            <div id="ReservationEdit2" runat="server" visible="false">
+
+                <asp:Label ID="lblMake" runat="server" Text="Make: "></asp:Label>
+                <asp:TextBox ID="txtMake" runat="server" CssClass="txtBox" ReadOnly="True" 
+                    Font-Size="X-Large"></asp:TextBox>
                 <br />
-                Return Date <br />
-                <asp:Label ID="Label2" runat="server" Text=""></asp:Label>
+                <asp:Label ID="lblModel" runat="server" Text="Model: "></asp:Label>
+                <asp:TextBox ID="txtModel" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
                 <br />
-                Car Info <br />
-                <asp:Label ID="Label3" runat="server" Text=""></asp:Label>
+                <asp:Label ID="lblColor" runat="server" Text="Color: "></asp:Label>
+                <asp:TextBox ID="txtColor" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
                 <br />
+                <asp:Label ID="lblYear" runat="server" Text="Year: "></asp:Label>
+                <asp:TextBox ID="txtYear" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
+                <br />
+                <asp:Label ID="lblMilage" runat="server" Text="Milage: "></asp:Label>
+                <asp:TextBox ID="txtMilage" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
+                <br />
+                <asp:Label ID="lblTransmission" runat="server" Text="Transmission: "></asp:Label>
+                <asp:TextBox ID="txtTransmission" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
+                <br />
+                <asp:Label ID="lblDrivetrain" runat="server" Text="Drivetrain: "></asp:Label>
+                <asp:TextBox ID="txtDrivetrain" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
+                <br /><br />
+
+                <asp:Button ID="btnDelete" runat="server" Text="Delete" BackColor="LightSalmon" OnClick="btnDelete_Click" 
+                     />
+
             </div>
 
         </div>

@@ -281,8 +281,7 @@ public partial class Reservation : System.Web.UI.Page
     }
     protected void ddlCarList_SelectedIndexChanged(object sender, EventArgs e)
     {
-        //resetForm();
-
+        
         if (ddlCarList.Items.Count > 1)
         {
             ReservationData2.Visible = true;
@@ -389,25 +388,23 @@ public partial class Reservation : System.Web.UI.Page
     {
 
         ReservationEdit.Visible = false;
+        ReservationEdit2.Visible = false;
         ReservationData0.Visible = true;
-
-    }
-    protected void btnEditReservation_Click(object sender, EventArgs e)
-    {
-
-        
 
     }
 
     public void FillReservationList()
     {
+        ddlReservationList.Items.Clear();
 
         ListItem newFirstItem = new ListItem();
         newFirstItem.Text = "-- PLEASE SELECT --";
         newFirstItem.Value = "-1";
         ddlReservationList.Items.Add(newFirstItem);
 
-        string selectSQL = "SELECT reservation_id, pickup_date, pickup_time FROM reservationForm WHERE customer_id = '" + Session["userID"].ToString() + "' ORDER BY pickup_date ASC " ;
+        clearCarInfo();
+
+        string selectSQL = "SELECT reservation_id, car_id, pickup_date, pickup_time FROM reservationForm WHERE customer_id = '" + Session["userID"].ToString() + "' ORDER BY pickup_date ASC " ;
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(selectSQL, con);
@@ -429,6 +426,17 @@ public partial class Reservation : System.Web.UI.Page
             }
             reader.Close();
 
+            int reservationTotal = ddlReservationList.Items.Count -1;
+
+            if (ddlReservationList.Items.Count == 1)
+            {
+                lblReservationResults.Text = "There are no reservations.";
+            }
+            else
+            {
+                lblReservationResults.Text = "You have " + reservationTotal.ToString() + " reservations.";
+            }
+
         }
         catch (Exception err)
         {
@@ -441,5 +449,144 @@ public partial class Reservation : System.Web.UI.Page
         }
 
     }
-   
+
+    public void clearCarInfo()
+    {
+        txtMake.Text = "";
+        txtModel.Text = "";
+        txtColor.Text = "";
+        txtYear.Text = "";
+        txtMilage.Text = "";
+        txtTransmission.Text = "";
+        txtDrivetrain.Text = "";
+    
+    }
+
+    protected void ddlReservationList_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+        if (ddlReservationList.Items.Count > 1)
+        {
+            ReservationEdit2.Visible = true;
+            lblResults.Text = "";
+        }
+
+        if (ddlReservationList.SelectedValue == "-1")
+        {
+            ReservationEdit2.Visible = false;
+            lblResults.Text = "Select a reservation. ";
+            return;
+        }
+
+        CarIdLookup(); //set Session var carID
+
+        string selectSQL;
+        selectSQL = "SELECT * FROM carData WHERE car_id = '" + Session["carID"].ToString() + "' ";
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(selectSQL, con);
+        SqlDataReader reader;
+
+        try
+        {
+            con.Open();
+            reader = cmd.ExecuteReader();
+            reader.Read();
+
+            string make = reader["make"].ToString();
+            txtMake.Text = make;
+            string model = reader["model"].ToString();
+            txtModel.Text = model;
+            txtColor.Text = reader["color"].ToString();
+            txtYear.Text = reader["year"].ToString();
+            txtMilage.Text = reader["milage"].ToString();
+            txtTransmission.Text = reader["transmission"].ToString();
+            txtDrivetrain.Text = reader["drivetrain"].ToString();
+            reader.Close();
+
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error reading from database";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+    }
+
+    protected void btnDelete_Click(object sender, EventArgs e)
+    {
+        //Define ADO.NET object
+        string deleteSQL;
+        deleteSQL = "DELETE FROM reservationForm WHERE reservation_id = '" + ddlReservationList.SelectedItem.Value.ToString() + "' ";
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(deleteSQL, con);
+
+        //Try to open the database and execute the update.
+        int deleted = 0; //counter
+
+        try
+        {
+            con.Open();
+            deleted = cmd.ExecuteNonQuery();
+
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error deleting record. ";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+
+        //If insert succeeded, refresh the ddl
+        if (deleted > 0)
+        {
+            Session["lblResults"] = "Reservation has been deleted.";
+            lblResults.Text = Session["lblResults"].ToString();
+            ReservationEdit2.Visible = false;
+            FillReservationList();
+            //Response.Redirect("Reservation.aspx");
+        }  
+
+    }
+
+    public void CarIdLookup()
+    {
+        string selectSQL;
+        selectSQL = "SELECT car_id FROM reservationForm WHERE reservation_id = '" + ddlReservationList.SelectedItem.Value.ToString() + "' ";
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(selectSQL, con);
+        SqlDataReader reader;
+
+        try
+        {
+            con.Open();
+            reader = cmd.ExecuteReader();
+            reader.Read();
+
+            Session["carID"] = reader["car_id"].ToString();
+
+            reader.Close();
+
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error reading from database";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+    }
 }
+
+
+
