@@ -97,6 +97,7 @@ public partial class ForSale : System.Web.UI.Page
             txtMilage.Text = reader["milage"].ToString();
             txtTransmission.Text = reader["transmission"].ToString();
             txtDrivetrain.Text = reader["drivetrain"].ToString();
+            txtSalePrice.Text = reader["sale_price"].ToString() + ".00";
             imgPicture.ImageUrl = "~/Images/vehicleImages/" + carId + ".jpg";
             imgPicture.ToolTip = make + " " + model;
 

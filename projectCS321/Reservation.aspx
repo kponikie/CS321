@@ -10,7 +10,7 @@
 
             <asp:Label ID="lblReservationResults" runat="server" Text=""></asp:Label>
             <br /><br />
-
+            
             <asp:Button ID="btnNewReservation" runat="server" Text="New" Width="160px" BackColor="LightGreen"
                 OnClick="btnNewReservation_Click" />
             <br /><br />
@@ -45,9 +45,9 @@
                 <asp:TextBox ID="txtDrivetrain" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
                 <br /><br />
 
-                <asp:Button ID="btnDelete" runat="server" Text="Delete" BackColor="LightSalmon" OnClick="btnDelete_Click" 
-                     />
-
+                <asp:Button ID="btnDelete" runat="server" Text="Cancel" BackColor="LightSalmon" OnClick="btnDelete_Click" />
+                <asp:Label ID="lblCancellationFee" runat="server" Text=""></asp:Label>
+                <br />
             </div>
 
         </div>
@@ -157,13 +157,63 @@
 
                 <%--Cupon--%>
                 <asp:Label ID="lblCupon" runat="server" Text="Cupon: " ></asp:Label>
-                <asp:TextBox ID="txtCupon" runat="server" Width="200px" ToolTip="Cupon number" ></asp:TextBox>&nbsp        
+                <asp:TextBox ID="txtCupon" runat="server" Width="200px" Enabled="false" ToolTip="Cupon number" ></asp:TextBox>&nbsp        
+                <br /><br />
+
+            <div id="ReservationData4" runat="server" visible="true">
+
+                <%--Credit Card Number--%>
+                Payment Info
+                <br />
+
+                <%--First Name--%>
+                <asp:Label ID="lblCardName" runat="server" Text="Name: " ></asp:Label>
+                <asp:TextBox ID="txtCardName" runat="server" Width="200px" ToolTip="Name on your Credit Card" ></asp:TextBox>&nbsp
+                <asp:CheckBox ID="ckbName" runat="server" AutoPostBack="true" 
+                    ToolTip="Same as Above" OnCheckedChanged="ckbName_CheckedChanged" />
+
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator6" runat="server" 
+                    ErrorMessage="* Required Field" ControlToValidate="txtCardName" 
+                    Display="Dynamic"></asp:RequiredFieldValidator>
+                <br />
+                <%--Card Type--%>
+                <asp:RadioButton ID="rdoVisa" runat="server" Checked="true" Text="Visa"  GroupName="creditCard" />
+                <asp:RadioButton ID="rdoMasterCard" runat="server" Text="Master Card"  GroupName="creditCard" />
+                <br />
+
+                 <%--Card Number--%>
+                <asp:Label ID="lblCreditCard" runat="server" Text="Credit Card: " ></asp:Label>
+                <asp:TextBox ID="txtCreditCard" runat="server" Width="200px" ToolTip="format: 4444-4444-4444-4444 (VISA starts with 4, MasterCard 51-55)" ></asp:TextBox>&nbsp
+                
+                <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" 
+                    ErrorMessage="* Required Field" ControlToValidate="txtCreditCard" 
+                    Display="Dynamic"></asp:RequiredFieldValidator>
+                
+                <asp:RegularExpressionValidator ID="RegularExpressionValidator4" runat="server" 
+                    ErrorMessage="Invalid Card Number." ForeColor="Red" ControlToValidate="txtCreditCard"
+                    ValidationExpression="^((4\d{3})|(5[1-5]\d{2})|(6011)|(34\d{1})|(37\d{1}))-?\d{4}-?\d{4}-?\d{4}|3[4,7][\d\s-]{15}$"    
+                    ></asp:RegularExpressionValidator>
+                <br />
+
+                <%--Exp. date--%>
+                <asp:Label ID="Label1" runat="server" Text="Exp: "></asp:Label>
+                <asp:DropDownList ID="ddlExpYear" runat="server" AutoPostBack="true"
+                    OnSelectedIndexChanged="ddlExpYear_SelectedIndexChanged">
+                </asp:DropDownList>
+ 
+                <asp:DropDownList ID="ddlExpMonth" runat="server" AutoPostBack="true" Enabled="false" >
+                </asp:DropDownList>
 
                 <br /><br />
 
+                <%--Over 25--%>
+                <asp:CheckBox ID="chkOver21" runat="server" Text="Over 25" Checked="false"/>
+                <br /><br />
+
+            </div>
                 <asp:Button ID="btnSubmit" runat="server" Text="Submit" Height="26px" 
                     OnClick="btnSubmit_Click" />
-
+        
             </div>
 
         </div>

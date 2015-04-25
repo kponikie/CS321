@@ -115,6 +115,7 @@ public partial class VehicleGuide : System.Web.UI.Page
             txtMilage.Text = reader["milage"].ToString();
             txtTransmission.Text = reader["transmission"].ToString();
             txtDrivetrain.Text = reader["drivetrain"].ToString();
+            txtRentPrice.Text = reader["rent_price"].ToString() + ".00";
             imgPicture.ImageUrl = "~/Images/vehicleImages/" + carId + ".jpg";
             imgPicture.ToolTip = make + " " + model;
 

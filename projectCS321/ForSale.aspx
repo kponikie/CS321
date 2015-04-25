@@ -37,6 +37,9 @@
     <asp:Label ID="lblPicture" runat="server" Text=""></asp:Label>
     <asp:Image ID="imgPicture" runat="server" width="300px" Height="200px" ToolTip=""/>
     <br />
+    <asp:Label ID="lblSalePrice" runat="server" Text="Price: $"></asp:Label>
+    <asp:TextBox ID="txtSalePrice" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
+    <br />
     <asp:Label ID="lblcarId" runat="server" Text="Vehicle Ref #: "></asp:Label>
     <asp:TextBox ID="txtcarId" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
     <br />

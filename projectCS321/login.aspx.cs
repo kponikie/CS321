@@ -44,6 +44,10 @@ public partial class login : System.Web.UI.Page
                 Session["email"] = reader["email"].ToString();
                 Session["phone"] = reader["phone"].ToString();
                 Session["userType"] = reader["type"].ToString();
+                Session["creditCard"] = reader["credit_card"].ToString();
+                Session["expMonth"] = reader["exp_month"].ToString();
+                Session["expYear"] = reader["exp_year"].ToString();
+                Session["creditType"] = reader["credit_type"].ToString();
                 Response.Redirect("Default.aspx");
             }
             reader.Close();
