@@ -203,6 +203,11 @@
  
                 <asp:DropDownList ID="ddlExpMonth" runat="server" AutoPostBack="true" Enabled="false" >
                 </asp:DropDownList>
+                <br />
+
+                <%--Rental Fee--%>
+                <asp:Label ID="lblRentalFee" runat="server" Text="Rental Fee: $"></asp:Label>
+                <asp:Label ID="lblTXTRentalFee" runat="server" Text=""></asp:Label>
 
                 <br /><br />
 

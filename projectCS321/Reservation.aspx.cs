@@ -196,6 +196,10 @@ public partial class Reservation : System.Web.UI.Page
         btnSmallCalendar.Visible = true;
         ReservationData3.Visible = true;
 
+        lblTXTRentalFee.Text = "TEST";
+        findRentalPrice();
+        
+
         if (Session["userName"] != null)
         {
             ddlExpMonth.Enabled = true;
@@ -245,7 +249,7 @@ public partial class Reservation : System.Web.UI.Page
             //e.Cell.Controls.Add(new LiteralControl("<span font-size='8px'><br/> Today</span>"));
         }
 
-        string selectSQL = "SELECT pickup_date FROM reservationForm WHERE reservationForm.car_id = '" + ddlCarList.SelectedItem.Value.ToString() + "' AND pickup_date >= '" + DateTime.Today + "' ";
+        string selectSQL = "SELECT pickup_date FROM reservationForm WHERE status = 1 AND reservationForm.car_id = '" + ddlCarList.SelectedItem.Value.ToString() + "' AND pickup_date >= '" + DateTime.Today + "' ";
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(selectSQL, con);
@@ -347,14 +351,13 @@ public partial class Reservation : System.Web.UI.Page
             }
 
         }
-        
 
         //Define ADO.NET object
         string insertSQL;
         insertSQL = "INSERT INTO reservationForm (";
-        insertSQL += "location_id, car_id, pickup_date, pickup_time, return_date, return_time, first_name, last_name, email, phone, customer_id, cupon_id) ";
+        insertSQL += "location_id, car_id, pickup_date, pickup_time, return_date, return_time, first_name, last_name, email, phone, customer_id, cupon_id, rental_price) ";
         insertSQL += "VALUES (";
-        insertSQL += "@loci, @cari, @picd , @pict, @retd, @rett, @firs, @last, @emai, @phon, @cusi, @cupi)";
+        insertSQL += "@loci, @cari, @picd , @pict, @retd, @rett, @firs, @last, @emai, @phon, @cusi, @cupi, @rent)";
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(insertSQL, con);
@@ -370,6 +373,7 @@ public partial class Reservation : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@last", txtLastName.Text);
         cmd.Parameters.AddWithValue("@emai", txtEmail.Text);
         cmd.Parameters.AddWithValue("@phon", txtPhone.Text);
+        cmd.Parameters.AddWithValue("@rent", lblTXTRentalFee.Text);
 
         if (Session["userName"] != null)
         {
@@ -418,7 +422,7 @@ public partial class Reservation : System.Web.UI.Page
             if (Session["userName"] != null)
             {
                 lblResults.Text += " " + Session["firstName"].ToString() + ".";
-                lblResults2.Text = "Reservation complete.";
+                lblResults2.Text = "Reservation complete. Your card has been charged $" + lblTXTRentalFee.Text + ".00";
             }
             else
             {
@@ -428,6 +432,37 @@ public partial class Reservation : System.Web.UI.Page
 
         }  
     
+    }
+
+    private void findRentalPrice()
+    {
+
+        string selectSQL = "SELECT rent_price FROM carData WHERE car_id = '" + Convert.ToInt32(ddlCarList.SelectedItem.Value) +  "' ";
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(selectSQL, con);
+        SqlDataReader reader;
+
+        try
+        {
+            con.Open();
+            reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                lblTXTRentalFee.Text = reader["rent_price"].ToString();
+            }
+            reader.Close();
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error reading from database: ";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
     }
 
     protected void btnNewReservation_Click(object sender, EventArgs e)
@@ -449,8 +484,9 @@ public partial class Reservation : System.Web.UI.Page
         ddlReservationList.Items.Add(newFirstItem);
 
         clearCarInfo();
+        clearOldDates();
 
-        string selectSQL = "SELECT reservation_id, car_id, pickup_date, pickup_time FROM reservationForm WHERE customer_id = '" + Session["userID"].ToString() + "' ORDER BY pickup_date ASC " ;
+        string selectSQL = "SELECT reservation_id, car_id, pickup_date, pickup_time FROM reservationForm WHERE status = 1 AND customer_id = '" + Session["userID"].ToString() + "' ORDER BY pickup_date ASC " ;
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(selectSQL, con);
@@ -494,6 +530,41 @@ public partial class Reservation : System.Web.UI.Page
             con.Close();
         }
 
+    }
+
+    public void clearOldDates()
+    {
+        //Define ADO.NET objects
+        string updateSQL;
+        updateSQL = "UPDATE reservationForm SET status=@status, changed_by=@changeBy WHERE status = 1 AND pickup_date < '" + DateTime.Today + "' ";
+
+        SqlConnection con = new SqlConnection (connectionString);
+        SqlCommand cmd = new SqlCommand (updateSQL, con);
+
+        //Add the parameters.
+        cmd.Parameters.AddWithValue("@status", "0");
+        cmd.Parameters.AddWithValue("@changeBy", "SYSTEM");
+        
+
+        //Try to open the database and execute the update
+        int updated = 0; //counter
+
+        try
+        {
+            con.Open();
+            updated = cmd.ExecuteNonQuery();
+            lblResults.Text = updated.ToString() + " record updates.";
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error updating records. ";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+    
     }
 
     public void clearCarInfo()
@@ -567,24 +638,29 @@ public partial class Reservation : System.Web.UI.Page
     {
 
         //Define ADO.NET object
-        string deleteSQL;
-        deleteSQL = "DELETE FROM reservationForm WHERE reservation_id = '" + ddlReservationList.SelectedItem.Value.ToString() + "' ";
+        string updateSQL;
+        updateSQL = "UPDATE reservationForm SET status=@status, changed_by=@changeBy, cancellation_fee=@fee FROM reservationForm WHERE status = 1 AND reservation_id = '" + ddlReservationList.SelectedItem.Value.ToString() + "' ";
 
         SqlConnection con = new SqlConnection(connectionString);
-        SqlCommand cmd = new SqlCommand(deleteSQL, con);
+        SqlCommand cmd = new SqlCommand(updateSQL, con);
 
-        //Try to open the database and execute the update.
-        int deleted = 0; //counter
+        //Add the parameters.
+        cmd.Parameters.AddWithValue("@status", "0");
+        cmd.Parameters.AddWithValue("@changeBy", Session["userName"].ToString());
+        cmd.Parameters.AddWithValue("@fee", Convert.ToInt32(Session["returnPrice"]));
+
+        //Try to open the database and execute the update
+        int updated = 0; //counter
 
         try
         {
             con.Open();
-            deleted = cmd.ExecuteNonQuery();
-
+            updated = cmd.ExecuteNonQuery();
+            lblResults.Text = updated.ToString() + " record updates.";
         }
         catch (Exception err)
         {
-            lblResults.Text = "Error deleting record. ";
+            lblResults.Text = "Error updating records. ";
             lblResults.Text += err.Message;
         }
         finally
@@ -593,13 +669,12 @@ public partial class Reservation : System.Web.UI.Page
         }
 
         //If insert succeeded, refresh the ddl
-        if (deleted > 0)
+        if (updated > 0)
         {
-            Session["lblResults"] = "Reservation has been deleted.";
+            Session["lblResults"] = "Reservation has been cancelled.";
             lblResults.Text = Session["lblResults"].ToString();
             ReservationEdit2.Visible = false;
             FillReservationList();
-            //Response.Redirect("Reservation.aspx");
         }  
 
     }
@@ -607,7 +682,7 @@ public partial class Reservation : System.Web.UI.Page
     public void CarIdLookup()
     {
         string selectSQL;
-        selectSQL = "SELECT car_id, pickup_date FROM reservationForm WHERE reservation_id = '" + ddlReservationList.SelectedItem.Value.ToString() + "' ";
+        selectSQL = "SELECT car_id, pickup_date, rental_price FROM reservationForm WHERE reservation_id = '" + ddlReservationList.SelectedItem.Value.ToString() + "' ";
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(selectSQL, con);
@@ -620,7 +695,8 @@ public partial class Reservation : System.Web.UI.Page
             reader.Read();
 
             Session["carID"] = reader["car_id"].ToString();
-            Session["pickupDate"] = reader["pickup_date"].ToString(); 
+            Session["pickupDate"] = reader["pickup_date"].ToString();
+            Session["rentalPrice"] = Convert.ToInt32(reader["rental_price"]);
 
             reader.Close();
 
@@ -717,25 +793,36 @@ public partial class Reservation : System.Web.UI.Page
     public void cancellationFeeCalculator()
     {
         DateTime reservationDate = Convert.ToDateTime(Session["pickupDate"]);
+        int orginalPrice = 0;
 
+        if (Session["rentalPrice"] != null)
+        {
+            orginalPrice = Convert.ToInt32(Session["rentalPrice"]);
+        }
+ 
         if (DateTime.Today == reservationDate || DateTime.Today.AddDays(1) == reservationDate)
         {
-            lblCancellationFee.Text = "Cancellaion fee is 75%.";
-            Session["cancellaionFee"] = .75;
+            lblCancellationFee.Text = "Cancellaion fee is 75%.";           
+            Session["feeCharge"] = orginalPrice * .75;
         }else if(DateTime.Today.AddDays(2) <= reservationDate && DateTime.Today.AddDays(6) >= reservationDate)
         {
             lblCancellationFee.Text = "Cancellaion fee is 50%.";
-            Session["cancellaionFee"] = .50;
+            Session["feeCharge"] = orginalPrice * .50;
         }else if(DateTime.Today.AddDays(7) <= reservationDate && DateTime.Today.AddDays(14) >= reservationDate)
         {
             lblCancellationFee.Text = "Cancellaion fee is 25%.";
-            Session["cancellaionFee"] = .25;
+            Session["feeCharge"] = orginalPrice * .25;
         }
         else
         {
             lblCancellationFee.Text = "There is no fee to cencel this reservation.";
-            Session["cancellaionFee"] = 0;
+            Session["feeCharge"] = 0;
         }
+
+        lblResults.Text = "Your Credit Card will be charge $" + Session["feeCharge"].ToString();
+
+        Session["rentalPrice"] = null;
+
     }
 
 }
