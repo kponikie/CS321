@@ -203,3 +203,12 @@ footer
     height:5px;
     background-color: green;
 }
+
+#Cupon 
+{
+    border: 2px 2px 2px dashed;
+    width: 200px;
+    height: 100px;
+    background-color: gray;
+    font-size: 150%;
+}

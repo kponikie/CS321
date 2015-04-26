@@ -26,8 +26,24 @@ public partial class Reservation : System.Web.UI.Page
                 ReservationEdit.Visible = true;
                 chkOver21.Checked = true;
                 FillReservationList();
-                txtCupon.Enabled = true;
-            }
+                ddlCupon.Enabled = true;
+                fillCuponList();
+
+                if ((bool)Session["rentMe"] == true) //This selects location and vehicle automaticly with data from Vehicel Guide
+                {
+                    ReservationData0.Visible = true;
+                    ReservationEdit.Visible = false;
+                    ddlLocation.SelectedIndex = ddlLocation.Items.IndexOf(ddlLocation.Items.FindByValue(Session["rentMeLocationId"].ToString()));
+                    ReservationData.Visible = true;
+                    fillCarList();
+                    ddlCarList.SelectedIndex = ddlCarList.Items.IndexOf(ddlCarList.Items.FindByValue(Session["rentMeCarId"].ToString()));
+                    ReservationData2.Visible = true;
+                    btnSmallCalendar.Visible = false;
+                    Calendar.Visible = true;
+                    Session["rentMe"] = false;
+                    
+                }
+            }            
         }
     }
 
@@ -333,13 +349,13 @@ public partial class Reservation : System.Web.UI.Page
 
             if (ddlExpYear.SelectedValue == "--")
             {
-                lblResults.Text = "Card Experation Year Required.";
+                lblResults.Text = "Card Expiration Year Required.";
                 lblResults.ForeColor = System.Drawing.Color.Red;
                 return;
             }
             if (ddlExpMonth.SelectedValue == "--")
             {
-                lblResults.Text = "Card Experation Month Required.";
+                lblResults.Text = "Card Expiration Month Required.";
                 lblResults.ForeColor = System.Drawing.Color.Red;
                 return;
             }
@@ -373,15 +389,33 @@ public partial class Reservation : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@last", txtLastName.Text);
         cmd.Parameters.AddWithValue("@emai", txtEmail.Text);
         cmd.Parameters.AddWithValue("@phon", txtPhone.Text);
-        cmd.Parameters.AddWithValue("@rent", lblTXTRentalFee.Text);
+        
 
         if (Session["userName"] != null)
         {
+            double newTotal = Convert.ToInt32(lblTXTRentalFee.Text);
+
+            if (Convert.ToInt32(ddlCupon.SelectedItem.Value) > 0)
+                {  
+                    double cupon = Convert.ToInt32(findCuponValue());
+                    double rental = Convert.ToInt32(lblTXTRentalFee.Text);
+
+                    double discount = rental * (cupon / 100); 
+                    newTotal =  rental - discount;
+                 
+                    lblResults2.Text = "Reservation complete. Your card has been charged $" + newTotal ;
+                    lblResults3.Text = "A discount of $" + discount + " has been applied to your reservation.";
+
+                    clearUsedCupon(); 
+                }
+
+            cmd.Parameters.AddWithValue("@rent", newTotal);
             cmd.Parameters.AddWithValue("@cusi", Convert.ToInt32(Session["userID"]));
-            cmd.Parameters.AddWithValue("@cupi", 1);
+            cmd.Parameters.AddWithValue("@cupi", ddlCupon.SelectedItem.Value);
         }
         else
         {
+            cmd.Parameters.AddWithValue("@rent", lblTXTRentalFee.Text);
             cmd.Parameters.AddWithValue("@cusi", 0);
             cmd.Parameters.AddWithValue("@cupi", 0);
         }
@@ -422,12 +456,35 @@ public partial class Reservation : System.Web.UI.Page
             if (Session["userName"] != null)
             {
                 lblResults.Text += " " + Session["firstName"].ToString() + ".";
-                lblResults2.Text = "Reservation complete. Your card has been charged $" + lblTXTRentalFee.Text + ".00";
+
+                if (Convert.ToInt32(ddlCupon.SelectedItem.Value) > 0)
+                {
+                    
+                    double cupon = Convert.ToInt32(findCuponValue());
+                    double rental = Convert.ToInt32(lblTXTRentalFee.Text);
+
+                    double discount = rental * (cupon / 100); 
+                    double newTotal =  rental - discount;
+                 
+                    lblResults2.Text = "Reservation complete. Your card has been charged $" + newTotal ;
+                    lblResults3.Text = "A discount of $" + discount + " has been applied to your reservation.";
+
+                    clearUsedCupon();
+                    
+                }
+                else
+                {
+                    lblResults2.Text = "Reservation complete. Your card has been charged $" + lblTXTRentalFee.Text + ".00";
+                    cuponGenerator();
+                }
+
+                
+                
             }
             else
             {
                 lblResults.Text += ".";
-                lblResults2.Text = " Do You want to join our customer list. Call today. !";
+                lblResults2.Text = "Reservation Complete.";
             }
 
         }  
@@ -553,7 +610,6 @@ public partial class Reservation : System.Web.UI.Page
         {
             con.Open();
             updated = cmd.ExecuteNonQuery();
-            lblResults.Text = updated.ToString() + " record updates.";
         }
         catch (Exception err)
         {
@@ -647,7 +703,7 @@ public partial class Reservation : System.Web.UI.Page
         //Add the parameters.
         cmd.Parameters.AddWithValue("@status", "0");
         cmd.Parameters.AddWithValue("@changeBy", Session["userName"].ToString());
-        cmd.Parameters.AddWithValue("@fee", Convert.ToInt32(Session["returnPrice"]));
+        cmd.Parameters.AddWithValue("@fee", Convert.ToInt32(Session["feeCharge"]));
 
         //Try to open the database and execute the update
         int updated = 0; //counter
@@ -656,7 +712,6 @@ public partial class Reservation : System.Web.UI.Page
         {
             con.Open();
             updated = cmd.ExecuteNonQuery();
-            lblResults.Text = updated.ToString() + " record updates.";
         }
         catch (Exception err)
         {
@@ -802,21 +857,21 @@ public partial class Reservation : System.Web.UI.Page
  
         if (DateTime.Today == reservationDate || DateTime.Today.AddDays(1) == reservationDate)
         {
-            lblCancellationFee.Text = "Cancellaion fee is 75%.";           
+            lblCancellationFee.Text = "Cancellation fee is 75%.";           
             Session["feeCharge"] = orginalPrice * .75;
         }else if(DateTime.Today.AddDays(2) <= reservationDate && DateTime.Today.AddDays(6) >= reservationDate)
         {
-            lblCancellationFee.Text = "Cancellaion fee is 50%.";
+            lblCancellationFee.Text = "Cancellation fee is 50%.";
             Session["feeCharge"] = orginalPrice * .50;
         }else if(DateTime.Today.AddDays(7) <= reservationDate && DateTime.Today.AddDays(14) >= reservationDate)
         {
-            lblCancellationFee.Text = "Cancellaion fee is 25%.";
+            lblCancellationFee.Text = "Cancellation fee is 25%.";
             Session["feeCharge"] = orginalPrice * .25;
         }
         else
         {
-            lblCancellationFee.Text = "There is no fee to cencel this reservation.";
-            Session["feeCharge"] = 0;
+            lblCancellationFee.Text = "Cancellation fee is 10%.";
+            Session["feeCharge"] = orginalPrice * .10;
         }
 
         lblResults.Text = "Your Credit Card will be charge $" + Session["feeCharge"].ToString();
@@ -825,6 +880,170 @@ public partial class Reservation : System.Web.UI.Page
 
     }
 
+    public void cuponGenerator()
+    {
+        //Generate random cupon 
+        int discount = 0;
+        var r = new Random();
+        discount = (r.Next(5, 30));
+
+        //Define ADO.NET object
+        string insertSQL;
+        insertSQL = "INSERT INTO cupons (customer_id, discount, description) VALUES (@customer, @discount, @description)";
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(insertSQL, con);
+
+        //Add the parameter.
+        cmd.Parameters.AddWithValue("@customer", Session["userID"].ToString());
+        cmd.Parameters.AddWithValue("@discount", discount);
+        cmd.Parameters.AddWithValue("@description", discount + "% DISCOUNT");
+
+        //Try to open the database and execute the update.
+        int added = 0; //counter
+
+        try
+        {
+            con.Open();
+            added = cmd.ExecuteNonQuery();
+
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error inserting record. ";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+
+        //If insert succeeded, refresh the ddl
+        if (added > 0)
+        {
+           
+            lblResults3.Text = "You have received a new cupon. " + discount + "%";
+            lblResults4.Text = discount + "% OFF";
+            lblResults5.Text = Session["firstName"].ToString() + " " + Session["lastName"].ToString();
+
+        }
+
+    }
+
+    protected void ddlCupon_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    public void fillCuponList()
+    {
+        ddlCupon.Items.Clear();
+
+        string selectSQL = "SELECT * FROM cupons WHERE customer_id = '" + Session["userID"].ToString() + "' AND status = 1 ";
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(selectSQL, con);
+        SqlDataReader reader;
+
+        try
+        {
+            con.Open();
+            reader = cmd.ExecuteReader();
+
+            ListItem newFirstItem = new ListItem();
+            newFirstItem.Text = "";
+            newFirstItem.Value = "-1";
+            ddlCupon.Items.Add(newFirstItem);
+
+            while (reader.Read())
+            {
+                ListItem newItem = new ListItem();
+                newItem.Text += reader["description"].ToString();
+                newItem.Value = reader["cupon_id"].ToString();
+                ddlCupon.Items.Add(newItem);
+            }
+            reader.Close();
+
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error reading from database: ";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+    }
+
+    public string findCuponValue()
+    {
+        string cupon = "";
+
+        string selectSQL = "SELECT discount FROM cupons WHERE cupon_id = '" + ddlCupon.SelectedItem.Value + "' ";
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(selectSQL, con);
+        SqlDataReader reader;
+
+        try
+        {
+            con.Open();
+            reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                cupon = reader["discount"].ToString();
+            }
+            reader.Close();
+
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error reading from database: ";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+
+        return cupon;
+    }
+
+    public void clearUsedCupon()
+    {
+        //Define ADO.NET objects
+        string updateSQL;
+        updateSQL = "UPDATE cupons SET status=@status, used_date=@used WHERE cupon_id = '" + ddlCupon.SelectedItem.Value + "' ";
+
+        SqlConnection con = new SqlConnection(connectionString);
+        SqlCommand cmd = new SqlCommand(updateSQL, con);
+
+        //Add the parameters.
+        cmd.Parameters.AddWithValue("@status", "0");
+        cmd.Parameters.AddWithValue("@used", DateTime.Today);
+
+
+        //Try to open the database and execute the update
+        int updated = 0; //counter
+
+        try
+        {
+            con.Open();
+            updated = cmd.ExecuteNonQuery();
+      
+        }
+        catch (Exception err)
+        {
+            lblResults.Text = "Error updating records. ";
+            lblResults.Text += err.Message;
+        }
+        finally
+        {
+            con.Close();
+        }
+    }
 }
 
 

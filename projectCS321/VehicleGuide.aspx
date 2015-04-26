@@ -46,7 +46,13 @@
     <asp:Label ID="lblAvailability" runat="server" Text="Available Today: "></asp:Label>
     <asp:TextBox ID="txtAvailability" runat="server" CssClass="txtBox" ReadOnly="True"></asp:TextBox>
     <br />
-     
+
+   
+
+        <asp:Button ID="btnRentMe" runat="server" Text="Rent Me" OnClick="btnRentMe_Click" 
+            Visible="false" BackColor="LightGreen" ToolTip="Click to see availability."/>
+
+    
 </div>
 
     <div style="float:left; padding:50px" id="divVehicleGuide2" runat="server" visible="true">

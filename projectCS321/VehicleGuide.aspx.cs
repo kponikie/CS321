@@ -17,6 +17,7 @@ public partial class VehicleGuide : System.Web.UI.Page
         if (!this.IsPostBack)
         {
             fillList();
+            Session["rentMe"] = false;
         }
     }
 
@@ -91,6 +92,11 @@ public partial class VehicleGuide : System.Web.UI.Page
 
     protected void lsbCars_SelectedIndexChanged(object sender, EventArgs e)
     {
+        if (Session["userName"] != null)
+        {
+            btnRentMe.Visible = true;
+        }
+
         string selectSQL;
         selectSQL = "SELECT * FROM carData " + "WHERE car_id = '" + lbxCars.SelectedItem.Value + "' ";
 
@@ -222,7 +228,48 @@ public partial class VehicleGuide : System.Web.UI.Page
 
             return false;
         }
-    
+
+        protected void btnRentMe_Click(object sender, EventArgs e)
+        {
+            Session["rentMe"] = true;
+            Session["rentMeCarId"] = lbxCars.SelectedItem.Value;
+            Session["rentMeLocationId"] = findLocationId();
+            Response.Redirect("Reservation.aspx");
+        }
+
+        private string findLocationId()
+        {
+            string location = "";
+
+            string selectSQL = "SELECT location_id FROM carData WHERE car_id = '" + lbxCars.SelectedItem.Value + "' ";
+
+            SqlConnection con = new SqlConnection(connectionString);
+            SqlCommand cmd = new SqlCommand(selectSQL, con);
+            SqlDataReader reader;
+
+            try
+            {
+                con.Open();
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    location = reader["location_id"].ToString();
+                }
+                reader.Close();
+            }
+            catch (Exception err)
+            {
+                lblResults.Text = "Error reading from database: ";
+                lblResults.Text += err.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return location;
+        }
 }
 
     

@@ -138,7 +138,6 @@
                 <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" 
                     ErrorMessage="Invalid Email address." ForeColor="Red" ControlToValidate="txtEmail" 
                     ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"></asp:RegularExpressionValidator>
-
                 <br />
 
                 <%--Phone--%>
@@ -157,7 +156,9 @@
 
                 <%--Cupon--%>
                 <asp:Label ID="lblCupon" runat="server" Text="Cupon: " ></asp:Label>
-                <asp:TextBox ID="txtCupon" runat="server" Width="200px" Enabled="false" ToolTip="Cupon number" ></asp:TextBox>&nbsp        
+                <asp:DropDownList ID="ddlCupon" runat="server" Width="200px" Enabled="false" ToolTip="Discount %%%" OnSelectedIndexChanged="ddlCupon_SelectedIndexChanged"></asp:DropDownList>
+
+                <%--<asp:TextBox ID="txtCupon" runat="server" Width="200px" Enabled="false" ToolTip="Cupon number" ></asp:TextBox>--%>&nbsp        
                 <br /><br />
 
             <div id="ReservationData4" runat="server" visible="true">
@@ -226,6 +227,13 @@
         <asp:Label runat="server" Text="" ID="lblResults"></asp:Label>
         <br />
         <asp:Label runat="server" Text="" ID="lblResults2"></asp:Label>
+        <br />
+        <asp:Label ID="lblResults3" runat="server" Text=""></asp:Label>
+        <div id="Cupon" runat="server">
+            <asp:Label ID="lblResults4" runat="server" Text=""></asp:Label><br/>
+            <asp:Label ID="lblResults5" runat="server" Text=""></asp:Label>
+        </div>
+        <br />
 
     </div>
 
