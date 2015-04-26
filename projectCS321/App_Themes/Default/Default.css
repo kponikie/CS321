@@ -190,10 +190,12 @@ footer
     margin-right: auto;
 }
 
-#Cupons
+.guestLock
 {
-    padding: 20px;
+    width:400px;
+    padding-top: 80px;
     font-size: 16px;
+    text-align: center;
     margin-left: auto;
     margin-right: auto;
 }
@@ -204,7 +206,7 @@ footer
     background-color: green;
 }
 
-#Cupon 
+#NewCupon 
 {
     border: 2px 2px 2px dashed;
     width: 200px;
@@ -212,3 +214,60 @@ footer
     background-color: gray;
     font-size: 150%;
 }
+
+.cuponTableClass table 
+{
+    margin-top:10px;
+}
+
+.cuponTableClass td
+{
+    width: 300px;
+    height: 100px;
+    border: 3px dashed black;
+    font-size: 200%;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+}
+.cuponTableClass p {
+    font-size: 10px;
+    padding: 10px;
+}
+
+#logIn 
+{
+    width: 350px;
+    height: 140px;
+    padding: 20px;
+    border: 1px solid gray;
+    box-shadow: 2px 2px 2px gray;
+    margin-top: 100px;
+    font-size: 120%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.RoundCorners 
+{
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.standardButton 
+{
+    background-color: lightgreen;
+    border-radius: 10px;
+    font-size: 15px;
+    padding: 3px 10px;
+}
+
+.cuponCenter 
+{
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+

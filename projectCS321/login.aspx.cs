@@ -14,7 +14,8 @@ public partial class login : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        lblResults.Text = "";  
+        lblResults.Text = "";
+        lblLoginResults.Text = "";
     }
 
     private string connectionString = WebConfigurationManager.ConnectionStrings["zzCS321_1ConnectionString"].ConnectionString;
@@ -28,6 +29,7 @@ public partial class login : System.Web.UI.Page
         SqlDataReader reader;
 
         int temp = 0;
+        lblLoginResults.Text = "";
 
         try
         {
@@ -58,7 +60,7 @@ public partial class login : System.Web.UI.Page
             }
             else
             {
-                lblResults.Text = "User Name or Password does not exist";
+                lblLoginResults.Text = "User Name or Password incorect !";
             }
 
             

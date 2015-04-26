@@ -49,7 +49,7 @@
 
    
 
-        <asp:Button ID="btnRentMe" runat="server" Text="Rent Me" OnClick="btnRentMe_Click" 
+        <asp:Button ID="btnRentMe" runat="server" Text="Rent Me" OnClick="btnRentMe_Click" CssClass="standardButton" 
             Visible="false" BackColor="LightGreen" ToolTip="Click to see availability."/>
 
     

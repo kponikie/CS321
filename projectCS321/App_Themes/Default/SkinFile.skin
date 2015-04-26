@@ -22,6 +22,38 @@ StaticDisplayLevels="2" Orientation="Horizontal" StaticSubMenuIndent="16px" >
     <StaticSelectedStyle BackColor="#5D7B9D" />
 </asp:Menu>
 
+
+<%-- SkinId="LoginTextBox" --%>
+<asp:TextBox runat="server" SkinId="BlueTextBox"
+    BorderWidth="2" 
+    BorderColor="#66CCFF"  
+    BorderStyle="Ridge" 
+    CssClass="RoundCorners"
+    Font-Size="Medium">
+</asp:TextBox>
+
+<asp:DropDownList runat="server" 
+    BorderWidth="2" 
+    BorderColor="#66CCFF"  
+    BorderStyle="Ridge"  
+    CssClass="RoundCorners"
+    Font-Size="Medium">
+</asp:DropDownList>
+
+
+
+<asp:RequiredFieldValidator runat="server"
+    ForeColor="Red">
+</asp:RequiredFieldValidator>
+    
+
+
+<asp:RegularExpressionValidator runat="server" 
+    ForeColor="Red">             
+</asp:RegularExpressionValidator>
+
+
+
 <asp:ListBox runat="server" SkinId="lbxGuide">
     
 </asp:ListBox>

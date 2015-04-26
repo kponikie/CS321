@@ -29,27 +29,31 @@ public partial class Reservation : System.Web.UI.Page
                 ddlCupon.Enabled = true;
                 fillCuponList();
 
-                if ((bool)Session["rentMe"] == true) //This selects location and vehicle automaticly with data from Vehicel Guide
+                if (Session["rentMe"] != null)
                 {
-                    ReservationData0.Visible = true;
-                    ReservationEdit.Visible = false;
-                    ddlLocation.SelectedIndex = ddlLocation.Items.IndexOf(ddlLocation.Items.FindByValue(Session["rentMeLocationId"].ToString()));
-                    ReservationData.Visible = true;
-                    fillCarList();
-                    ddlCarList.SelectedIndex = ddlCarList.Items.IndexOf(ddlCarList.Items.FindByValue(Session["rentMeCarId"].ToString()));
-                    ReservationData2.Visible = true;
-                    btnSmallCalendar.Visible = false;
-                    Calendar.Visible = true;
-                    Session["rentMe"] = false;
-                    
+                    if ((bool)Session["rentMe"] == true) //This selects location and vehicle automaticly with data from Vehicel Guide
+                    {
+                        ReservationData0.Visible = true;
+                        ReservationEdit.Visible = false;
+                        ddlLocation.SelectedIndex = ddlLocation.Items.IndexOf(ddlLocation.Items.FindByValue(Session["rentMeLocationId"].ToString()));
+                        ReservationData.Visible = true;
+                        fillCarList();
+                        ddlCarList.SelectedIndex = ddlCarList.Items.IndexOf(ddlCarList.Items.FindByValue(Session["rentMeCarId"].ToString()));
+                        ReservationData2.Visible = true;
+                        btnSmallCalendar.Visible = false;
+                        Calendar.Visible = true;
+                        Session["rentMe"] = false;
+
+                    }
                 }
+                
             }            
         }
     }
 
     public void fillTimeList()
     {
-        ddlPickupTime.Items.Add("SELECT");
+        ddlPickupTime.Items.Add("---");
 
         for(int i=8; i<=20; i++)
         {
@@ -889,7 +893,7 @@ public partial class Reservation : System.Web.UI.Page
 
         //Define ADO.NET object
         string insertSQL;
-        insertSQL = "INSERT INTO cupons (customer_id, discount, description) VALUES (@customer, @discount, @description)";
+        insertSQL = "INSERT INTO cupons (customer_id, discount, description, created_date) VALUES (@customer, @discount, @description, @date)";
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(insertSQL, con);
@@ -898,6 +902,7 @@ public partial class Reservation : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@customer", Session["userID"].ToString());
         cmd.Parameters.AddWithValue("@discount", discount);
         cmd.Parameters.AddWithValue("@description", discount + "% DISCOUNT");
+        cmd.Parameters.AddWithValue("@date", DateTime.Today);
 
         //Try to open the database and execute the update.
         int added = 0; //counter
@@ -939,7 +944,7 @@ public partial class Reservation : System.Web.UI.Page
     {
         ddlCupon.Items.Clear();
 
-        string selectSQL = "SELECT * FROM cupons WHERE customer_id = '" + Session["userID"].ToString() + "' AND status = 1 ";
+        string selectSQL = "SELECT * FROM cupons WHERE customer_id = '" + Session["userID"].ToString() + "' AND status = 1 ORDER BY created_date DESC";
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(selectSQL, con);
