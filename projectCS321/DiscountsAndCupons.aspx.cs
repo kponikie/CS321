@@ -27,8 +27,6 @@ public partial class DiscountsAndCupons : System.Web.UI.Page
             guestMessage.Visible = false;
             memberMessage.Visible = true;
             lblResults.Text = "Available discounts and Cupons for " + Session["firstName"].ToString() + " " + Session["lastName"].ToString() + " only.";
-            //generateNewCuponList();
-            //rdbNew.Checked = true;
         }
 
     }

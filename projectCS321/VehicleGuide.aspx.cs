@@ -147,7 +147,7 @@ public partial class VehicleGuide : System.Web.UI.Page
         public void vehicleAvailability ()
         {
 
-            string selectSQL = "SELECT pickup_date FROM reservationForm WHERE reservationForm.car_id = '" + lbxCars.SelectedItem.Value.ToString() + "' ";
+            string selectSQL = "SELECT pickup_date FROM reservationForm WHERE reservationForm.car_id = '" + lbxCars.SelectedItem.Value.ToString() + "' AND status = 1 ";
 
             SqlConnection con = new SqlConnection(connectionString);
             SqlCommand cmd = new SqlCommand(selectSQL, con);
@@ -190,7 +190,7 @@ public partial class VehicleGuide : System.Web.UI.Page
         public Boolean vehicleCount(string carID)
         {
 
-            string selectSQL = "SELECT pickup_date FROM reservationForm WHERE reservationForm.car_id = '" + carID + "' ";
+            string selectSQL = "SELECT pickup_date FROM reservationForm WHERE reservationForm.car_id = '" + carID + "' AND status = 1 ";
 
             SqlConnection con = new SqlConnection(connectionString);
             SqlCommand cmd = new SqlCommand(selectSQL, con);

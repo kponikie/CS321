@@ -363,13 +363,14 @@ public partial class Reservation : System.Web.UI.Page
                 lblResults.ForeColor = System.Drawing.Color.Red;
                 return;
             }
-            if (!chkOver21.Checked)
-            {
-                lblResults.Text = "Please, confirm your age.";
-                lblResults.ForeColor = System.Drawing.Color.Red;
-                return;
-            }
 
+        }
+
+        if (!chkOver21.Checked)
+        {
+            lblResults.Text = "Please, confirm your age.";
+            lblResults.ForeColor = System.Drawing.Color.Red;
+            return;
         }
 
         //Define ADO.NET object
@@ -407,10 +408,15 @@ public partial class Reservation : System.Web.UI.Page
                     double discount = rental * (cupon / 100); 
                     newTotal =  rental - discount;
                  
-                    lblResults2.Text = "Reservation complete. Your card has been charged $" + newTotal ;
-                    lblResults3.Text = "A discount of $" + discount + " has been applied to your reservation.";
+                    lblResults.Text = "Thank You.<br/>Reservation complete. Your card has been charged $" + newTotal ;
+                    lblResults.Text += "<br/>A discount of $" + discount + " has been applied to your reservation.";
 
-                    clearUsedCupon(); 
+                    clearUsedCupon();
+                }
+                else
+                {
+                    lblResults.Text = "Reservation complete. Your card has been charged $" + lblTXTRentalFee.Text + ".00";
+                    cuponGenerator();
                 }
 
             cmd.Parameters.AddWithValue("@rent", newTotal);
@@ -419,6 +425,8 @@ public partial class Reservation : System.Web.UI.Page
         }
         else
         {
+            lblResults.Text = "Thank You. <br/>Reservation complete. Your card has been charged $" + lblTXTRentalFee.Text + ".00";
+
             cmd.Parameters.AddWithValue("@rent", lblTXTRentalFee.Text);
             cmd.Parameters.AddWithValue("@cusi", 0);
             cmd.Parameters.AddWithValue("@cupi", 0);
@@ -455,41 +463,6 @@ public partial class Reservation : System.Web.UI.Page
             ReservationData0.Visible = false;
             ReservationData2.Visible = false;
             ReservationData3.Visible = false;
-            lblResults.Text = "Thank You";
-
-            if (Session["userName"] != null)
-            {
-                lblResults.Text += " " + Session["firstName"].ToString() + ".";
-
-                if (Convert.ToInt32(ddlCupon.SelectedItem.Value) > 0)
-                {
-                    
-                    double cupon = Convert.ToInt32(findCuponValue());
-                    double rental = Convert.ToInt32(lblTXTRentalFee.Text);
-
-                    double discount = rental * (cupon / 100); 
-                    double newTotal =  rental - discount;
-                 
-                    lblResults2.Text = "Reservation complete. Your card has been charged $" + newTotal ;
-                    lblResults3.Text = "A discount of $" + discount + " has been applied to your reservation.";
-
-                    clearUsedCupon();
-                    
-                }
-                else
-                {
-                    lblResults2.Text = "Reservation complete. Your card has been charged $" + lblTXTRentalFee.Text + ".00";
-                    cuponGenerator();
-                }
-
-                
-                
-            }
-            else
-            {
-                lblResults.Text += ".";
-                lblResults2.Text = "Reservation Complete.";
-            }
 
         }  
     
@@ -699,7 +672,7 @@ public partial class Reservation : System.Web.UI.Page
 
         //Define ADO.NET object
         string updateSQL;
-        updateSQL = "UPDATE reservationForm SET status=@status, changed_by=@changeBy, cancellation_fee=@fee FROM reservationForm WHERE status = 1 AND reservation_id = '" + ddlReservationList.SelectedItem.Value.ToString() + "' ";
+        updateSQL = "UPDATE reservationForm SET status=@status, changed_by=@changeBy, cancellation_fee=@fee, rental_price=@rental FROM reservationForm WHERE status = 1 AND reservation_id = '" + ddlReservationList.SelectedItem.Value.ToString() + "' ";
 
         SqlConnection con = new SqlConnection(connectionString);
         SqlCommand cmd = new SqlCommand(updateSQL, con);
@@ -708,6 +681,7 @@ public partial class Reservation : System.Web.UI.Page
         cmd.Parameters.AddWithValue("@status", "0");
         cmd.Parameters.AddWithValue("@changeBy", Session["userName"].ToString());
         cmd.Parameters.AddWithValue("@fee", Convert.ToInt32(Session["feeCharge"]));
+        cmd.Parameters.AddWithValue("@rental", 0);
 
         //Try to open the database and execute the update
         int updated = 0; //counter
@@ -926,10 +900,14 @@ public partial class Reservation : System.Web.UI.Page
         //If insert succeeded, refresh the ddl
         if (added > 0)
         {
-           
-            lblResults3.Text = "You have received a new cupon. " + discount + "%";
-            lblResults4.Text = discount + "% OFF";
-            lblResults5.Text = Session["firstName"].ToString() + " " + Session["lastName"].ToString();
+            lblResults.Text += "<br/>Congratulations!<br/>You have received a new cupon.";
+            TableRow tRow = new TableRow();
+            newCupon.Rows.Add(tRow);
+            TableCell tCell = new TableCell();
+            tCell.Text = discount + "% DISCOUNT";
+            tCell.Text += "<br /><p>Generated today";
+            tCell.Text += "<br />Exclusively for " + Session["firstName"].ToString() + " " + Session["lastName"].ToString() + "</p>";
+            tRow.Cells.Add(tCell);
 
         }
 

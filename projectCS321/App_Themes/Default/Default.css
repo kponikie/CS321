@@ -4,7 +4,7 @@
     Defines the main font used throughout the entire site.
   */
   font-family: Arial, Sans-Serif;
-  margin-top: 0px;
+  margin-top: 1px;
 }
 
 body
@@ -81,7 +81,7 @@ nav
 {
   /* The menu spans the page width, right below the header. */
   width: 800px;
-  height: 40px;
+  height: 45px;
   background-color: #555555;
 }
 
@@ -104,6 +104,7 @@ Section#MainContent
   min-height: 500px;
   padding-bottom:5px;
   padding-top: 20px;
+  clear: both;
 }
 
 footer
@@ -200,12 +201,6 @@ footer
     margin-right: auto;
 }
 
-#UserLoginBar
-{
-    height:5px;
-    background-color: green;
-}
-
 #NewCupon 
 {
     border: 2px 2px 2px dashed;
@@ -269,5 +264,30 @@ footer
     width: 600px;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 50px;
 }
 
+.tableLabel 
+{
+    text-align: right;
+    width: 150px;
+}
+
+.mgmt 
+{
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:center;
+}
+.tableRewards td
+{
+    padding:0px;
+    width: 60px;
+    height: 30px;
+    text-align: center;
+}
+.tableRewards
+{
+    
+}

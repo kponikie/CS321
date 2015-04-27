@@ -50,13 +50,20 @@ public partial class login : System.Web.UI.Page
                 Session["expMonth"] = reader["exp_month"].ToString();
                 Session["expYear"] = reader["exp_year"].ToString();
                 Session["creditType"] = reader["credit_type"].ToString();
-                Response.Redirect("Default.aspx");
+                
             }
             reader.Close();
 
             if (temp == 1)
             {
-                lblResults.Text = "OK";
+                if (Session["userType"].ToString() == "2")
+                {
+                    Response.Redirect("mgmt.aspx");
+                }
+                else
+                {
+                    Response.Redirect("Default.aspx");
+                }
             }
             else
             {
