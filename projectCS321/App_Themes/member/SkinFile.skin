@@ -1,0 +1,59 @@
+﻿<%--
+Default skin template. The following skins are provided as examples only.
+
+1. Named control skin. The SkinId should be uniquely defined because
+   duplicate SkinId's per control type are not allowed in the same theme.
+
+<asp:GridView runat="server" SkinId="gridviewSkin" BackColor="White" >
+   <AlternatingRowStyle BackColor="Blue" />
+</asp:GridView>
+
+2. Default skin. The SkinId is not defined. Only one default 
+   control skin per control type is allowed in the same theme.
+
+<asp:Image runat="server" ImageUrl="~/images/image1.jpg" />
+--%>
+
+<%-- Settings for main menu. --%>
+<asp:Menu runat="server" SkinId="MainMenu" 
+StaticDisplayLevels="2" Orientation="Horizontal" StaticSubMenuIndent="16px" >
+    <StaticHoverStyle BackColor="#5D7B9D" ForeColor="White" />
+    <StaticMenuItemStyle HorizontalPadding="15px" VerticalPadding="10px" />
+    <StaticSelectedStyle BackColor="#5D7B9D" />
+</asp:Menu>
+
+
+<%-- SkinId="LoginTextBox" --%>
+<asp:TextBox runat="server" SkinId="BlueTextBox"
+    BorderWidth="2" 
+    BorderColor="#66CCFF"  
+    BorderStyle="Ridge" 
+    CssClass="RoundCorners"
+    Font-Size="Medium">
+</asp:TextBox>
+
+<asp:DropDownList runat="server" 
+    BorderWidth="2" 
+    BorderColor="#66CCFF"  
+    BorderStyle="Ridge"  
+    CssClass="RoundCorners"
+    Font-Size="Medium">
+</asp:DropDownList>
+
+
+
+<asp:RequiredFieldValidator runat="server"
+    ForeColor="Red">
+</asp:RequiredFieldValidator>
+    
+
+
+<asp:RegularExpressionValidator runat="server" 
+    ForeColor="Red">             
+</asp:RegularExpressionValidator>
+
+
+
+<asp:ListBox runat="server" SkinId="lbxGuide">
+    
+</asp:ListBox>

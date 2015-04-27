@@ -1,0 +1,293 @@
+﻿*
+{
+  /* 
+    Defines the main font used throughout the entire site.
+  */
+  font-family: Arial, Sans-Serif;
+  margin-top: 1px;
+}
+
+body
+{
+  /* 
+    Clears white space around the body and gives it a grey background color.
+  */
+  margin: 0;
+  background-color: #e1e1e1;
+}
+
+a
+{
+  /*
+    Clears the underline on normal links, and gives them a different text color.
+  */
+  text-decoration: none;
+  color: white;
+}
+
+  a:hover
+  {
+  /*
+    Underlines links when the user hovers the mouse over them.
+  */
+    text-decoration: none;
+    color: #509EE7;
+  }
+
+h1
+{
+  /*
+    Makes h1 elements smaller than their browser default.
+  */
+  font-size: 20px;
+  padding: 0px;
+  margin: 0px;
+}
+
+#Page
+{
+  /*
+    Sets the total width for the entire page. Also sets the background color which is used to fill the background
+    Uses margin: auto to center the entire page in the middle of the browser's window.
+  */
+  width: 1800px;
+  background-color: white;
+  box-shadow: 2px 2px 40px grey;
+  margin: auto;
+}
+
+header
+{
+ /* Header */
+  width: 800px;
+  height: 100px;
+}
+
+#hSection1 {
+    /* Header Section 1 of 2 (left siede).*/
+    padding-left:10px;
+    padding-top: 15px;
+}
+
+#hSection2 {
+    /* Header Section 2 of 2 (right siede).*/
+    float:right;
+    padding-right:10px;
+    padding-top: 15px;
+    text-align: right;
+}
+
+nav
+{
+  /* The menu spans the page width, right below the header. */
+  width: 800px;
+  height: 45px;
+  background-color: lightgreen;
+}
+
+  nav a
+  {
+    /* Links in the Menu are white. */
+    color: white;
+  }
+
+Section#MainContent
+{
+  /*
+    Defines the main content area. The #MainContent element has a minimum height of 400 pixels, but can grow if necessary.
+    The font-size is 80% of its parent element, which in this case comes down to 80% of the font
+    the user has specified as the default font in the browser. 
+  */
+  font-size: 0.8em;
+  width: 800px;
+  background-color: white;
+  min-height: 500px;
+  padding-bottom:5px;
+  padding-top: 20px;
+  clear: both;
+}
+
+footer
+{
+  /*
+    The footer is positioned below all other content (yet still within PageWrapper).
+  */
+  clear: both;
+  width: 800px;
+  height: 150px;
+  background-color: black;
+  color: White;
+  text-align: center;
+  font-size: 0.7em;
+  font-weight: bold;
+}
+
+#fSection1 {
+    /* Footer Section 1 out of 3.*/
+    width:255px;
+    min-height:110px;
+    padding: 5px;
+    float: left;
+}
+
+#fSection2 {
+    /* Footer Section 2 out of 3.*/
+    width:255px;
+    min-height:110px;
+    padding: 5px;
+    float: left;
+}
+#fSection3 {
+    /* Footer Section 3 out of 3.*/
+    width:255px;
+    min-height:110px;
+    padding: 5px;
+    float: right;
+}
+
+#copyright {
+    /* Last line of text.*/
+    clear:both;
+    color: #808080;
+    font-weight: normal;
+}
+
+ /*Vehicle Guide Classes*/
+.txtBox 
+{
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    
+}
+
+.listBox 
+{
+    border:none;
+    padding-left: 15px;
+    padding-right: 30px;
+}
+
+.textAlignCenter
+{
+    text-align: center;
+}
+
+#divLocation
+{
+    padding: 20px;
+    font-size: 16px;
+    text-align: center;
+    width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#divReservation
+{
+    padding: 20px;
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.guestLock
+{
+    width:400px;
+    padding-top: 80px;
+    font-size: 16px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#NewCupon 
+{
+    border: 2px 2px 2px dashed;
+    width: 200px;
+    height: 100px;
+    background-color: gray;
+    font-size: 150%;
+}
+
+.cuponTableClass table 
+{
+    margin-top:10px;
+}
+
+.cuponTableClass td
+{
+    width: 300px;
+    height: 100px;
+    border: 3px dashed black;
+    font-size: 200%;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+}
+.cuponTableClass p {
+    font-size: 10px;
+    padding: 10px;
+}
+
+#logIn 
+{
+    width: 350px;
+    height: 140px;
+    padding: 20px;
+    border: 1px solid gray;
+    box-shadow: 2px 2px 2px gray;
+    margin-top: 100px;
+    font-size: 120%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.RoundCorners 
+{
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.standardButton 
+{
+    background-color: lightgreen;
+    border-radius: 10px;
+    font-size: 15px;
+    padding: 3px 10px;
+}
+
+.cuponCenter 
+{
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+.tableLabel 
+{
+    text-align: right;
+    width: 150px;
+}
+
+.mgmt 
+{
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:center;
+}
+.tableRewards td
+{
+    padding:0px;
+    width: 60px;
+    height: 30px;
+    text-align: center;
+}
+.tableRewards
+{
+    
+}
